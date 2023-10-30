@@ -35,6 +35,19 @@ class _QuizPageState extends State<QuizPage> {
   List<Icon> scoreKeeper = [];
 
   void checkAnswer(bool userAnswer) {
+    if (quizBrain.isFinished()) {
+      setState(() {
+        quizBrain.reset();
+        scoreKeeper.clear();
+      });
+
+      Alert(
+        context: context,
+        title: "Finished",
+        desc: "You have reached end of the quiz",
+      ).show();
+      return;
+    }
     if (userAnswer == quizBrain.getAnswer()) {
       scoreKeeper.add(
         const Icon(
@@ -50,6 +63,7 @@ class _QuizPageState extends State<QuizPage> {
         ),
       );
     }
+    quizBrain.nextQuestion();
   }
 
   @override
@@ -83,7 +97,6 @@ class _QuizPageState extends State<QuizPage> {
                 onPressed: () {
                   setState(() {
                     checkAnswer(true);
-                    quizBrain.nextQuestion();
                   });
                 },
                 child: const Text(
@@ -113,7 +126,6 @@ class _QuizPageState extends State<QuizPage> {
                 onPressed: () {
                   setState(() {
                     checkAnswer(false);
-                    quizBrain.nextQuestion();
                   });
                 },
               ),
